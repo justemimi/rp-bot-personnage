@@ -196,4 +196,5 @@ __**Commandes disponibles :**__
 """)
 
 # Lance le bot
+keep_alive()
 bot.run(os.environ['DISCORD_TOKEN'])

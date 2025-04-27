@@ -541,6 +541,116 @@ async def equipement(ctx, member: discord.Member = None):
 import json
 import os
 
+@bot.command(name="topxp_serveur")
+async def topxp_serveur(ctx):
+    if os.path.exists("xp_data.json"):
+        with open("xp_data.json", "r") as f:
+            xp_data = json.load(f)
+    else:
+        await ctx.send("⚠️ Pas encore de données d'XP.")
+        return
+
+    membres = [(int(user_id), data["xp"]) for user_id, data in xp_data.items()]
+    membres.sort(key=lambda x: x[1], reverse=True)
+
+    top10 = membres[:10]
+
+    message = "**🏆 Top 10 XP du serveur :**\n"
+    for i, (user_id, xp) in enumerate(top10, 1):
+        membre = ctx.guild.get_member(user_id)
+        if membre:
+            message += f"{i}. {membre.display_name} - {xp} XP\n"
+
+    await ctx.send(message)
+
+@bot.command(name="topxp")
+async def topxp(ctx):
+    if os.path.exists("xp_data.json"):
+        with open("xp_data.json", "r") as f:
+            xp_data = json.load(f)
+    else:
+        await ctx.send("⚠️ Pas encore de données d'XP.")
+        return
+
+    membres = [(user_id, data["xp"]) for user_id, data in xp_data.items()]
+    membres.sort(key=lambda x: x[1], reverse=True)
+
+    top10 = membres[:10]
+
+    message = "**🌍 Top 10 XP Global :**\n"
+    for i, (user_id, xp) in enumerate(top10, 1):
+        utilisateur = await bot.fetch_user(int(user_id))
+        message += f"{i}. {utilisateur.name} - {xp} XP\n"
+
+    await ctx.send(message)
+
+@bot.command(name="profil_histoire")
+async def profil_histoire(ctx, *, histoire):
+    profils = get_profil(ctx.author)
+    profils[str(ctx.author.id)]["histoire"] = histoire
+
+    with open("profils.json", "w") as f:
+        json.dump(profils, f, indent=4)
+
+    await ctx.send("✅ Ton histoire a été mise à jour !")
+
+@bot.command(name="profil_couleur")
+async def profil_couleur(ctx, couleur):
+    if not couleur.startswith("#") or len(couleur) != 7:
+        await ctx.send("❌ Format incorrect ! Exemple : `#ff0000`")
+        return
+
+    profils = get_profil(ctx.author)
+    profils[str(ctx.author.id)]["couleur"] = couleur
+
+    with open("profils.json", "w") as f:
+        json.dump(profils, f, indent=4)
+
+    await ctx.send("✅ Ta couleur de profil a été mise à jour !")
+
+@bot.command(name="profil_type")
+async def profil_type(ctx, *, type_personnalise):
+    profils = get_profil(ctx.author)
+    profils[str(ctx.author.id)]["type"] = type_personnalise
+
+    with open("profils.json", "w") as f:
+        json.dump(profils, f, indent=4)
+
+    await ctx.send("✅ Ton type a été mis à jour !")
+
+@bot.command(name="profil_pouvoir")
+async def profil_pouvoir(ctx, *, pouvoir):
+    profils = get_profil(ctx.author)
+    profils[str(ctx.author.id)]["pouvoir"] = pouvoir
+
+    with open("profils.json", "w") as f:
+        json.dump(profils, f, indent=4)
+
+    await ctx.send("✅ Ton pouvoir a été mis à jour !")
+
+@bot.command(name="profil")
+async def profil(ctx, membre: discord.Member = None):
+    if membre is None:
+        membre = ctx.author
+
+    profils = get_profil(membre)
+    infos = profils.get(str(membre.id), None)
+
+    if infos is None:
+        await ctx.send("❌ Ce membre n'a pas encore personnalisé son profil.")
+        return
+
+    embed = discord.Embed(
+        title=f"Profil de {membre.display_name}",
+        description=f"**Type :** {infos['type']}\n"
+                    f"**Pouvoir :** {infos['pouvoir']}\n\n"
+                    f"**Histoire :**\n{infos['histoire']}",
+        color=int(infos["couleur"].lstrip('#'), 16)
+    )
+    embed.set_thumbnail(url=membre.avatar.url)
+
+    await ctx.send(embed=embed)
+
 @bot.command()
 async def aide(ctx):
     commandes = """
@@ -573,6 +683,13 @@ Histoire des personnages :
 👥 m!relation <nom> → pour afficher ses amis, ennemis, famille.
 👥 m!relation_modifier <nom> <Amis/Ennemis/Famille> <@mention>  → pour ajouter/supprimer des relations.
 
+Profil utilisateur :
+m!profil_histoire ➔Personnaliser l'histoire de son personnage
+m!profil_couleur ➔ Modifier la couleur de son profil
+m!profil_type ➔ Choisir le type/race de son personnage
+m!profil_pouvoir ➔ Définir son pouvoir magique/spécial
+m!profil ➔ Voir son propre profil ou celui d'un membre
+
 Carte :
 🗺️ m!catre ➔ Affiche la carte du monde
 🗺️ m!carte_control <nom> <x> <y> ➔ Déplacer un personnage sur la carte
@@ -583,6 +700,9 @@ Niveau :
 🏅 m!grades <@membre> → Affiche ton grade en fonction de ton niveau
 🏅 m!equipement <@membre> → Affiche ton inventaire d’équipements gagnés avec le niveau
 
+Top XP :
+m!topxp_serveur → Top 10 membres avec le plus d'XP du serveur
+m!topxp → Top 10 membres global (tous les utilisateurs du bot)
 
 Bonus :
 😂 m!blague ➔ Blague aléatoire

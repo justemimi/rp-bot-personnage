@@ -20,8 +20,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)  # OK
         self.send_header('Content-type', 'text/html')  # Type de la réponse
         self.end_headers()
-        self.wfile.write(b"🚀 Bot RP Manager est en ligne !")  # Message de réponse
-
+        self.wfile.write("🚀 Bot RP Manager est en ligne !".encode('utf-8'))
+        
 # Fonction pour lancer le serveur
 def run_web():
     with socketserver.TCPServer(("", PORT), Handler) as httpd:

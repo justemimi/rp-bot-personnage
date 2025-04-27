@@ -1,8 +1,69 @@
 {
-    "gyna": {
-        "symbole": "Gyna",
-        "type": "ange",
-        "role_restreint": null,
-        "avatar_url": "https://cdn.discordapp.com/attachments/1364763398075842570/1365795194326487182/nickocreates_ai.jpeg?ex=680e9b65&is=680d49e5&hm=5d483756c0b8393ff956b14d63cab9176e3ad8a6946173ed6790ebb7cd6f8bec&"
+    "NomDuPerso": {
+        "symbole": "!",
+        "type": "Humain",
+        "image_url": "https://lien/image.png",
+        "banniere_url": "https://lien/banniere.png",
+        "restreint": false,
+        "roles_autorises": [],
+        "role_associe": null,
+        "pouvoir": "Super pouvoir",
+        "couleur": "rouge",
+        "histoire": "Il \u00e9tait une fois...",
+        "position": {
+            "x": 0,
+            "y": 0
+        },
+        "relations": {
+            "Amis": [],
+            "Ennemis": [],
+            "Famille": []
+        }
+    },
+    "Gya": {
+        "symbole": "Gya",
+        "type": "Inconnu",
+        "image_url": "https://cdn.discordapp.com/attachments/1364763398075842570/1365916594131439626/nickocreates_ai.jpeg?ex=680f0c75&is=680dbaf5&hm=cc2cf0883f617514917ccaedd2795671f01e7df5c4ac083b6531983e3f6ff12d&",
+        "banniere_url": "https://cdn.discordapp.com/attachments/1364763398075842570/1365916783063728148/telecharger_42.jpeg?ex=680f0ca2&is=680dbb22&hm=4190845fc175daf5069e46b16b5d9c0463a0d76ffffab057f9917a9a6c4ff8ec&",
+        "restreint": false,
+        "roles_autorises": [],
+        "role_associe": null,
+        "pouvoir": null,
+        "couleur": "#FF0000",
+        "histoire": null,
+        "position": {
+            "x": 0,
+            "y": 0
+        },
+        "relations": {
+            "Amis": [
+                "Lee mul-sonyeo"
+            ],
+            "Ennemis": [],
+            "Famille": []
+        }
+    },
+    "Directeur": {
+        "symbole": "Directeur",
+        "type": "Inconnu",
+        "image_url": "https://cdn.discordapp.com/attachments/1364763398075842570/1365919712403525633/telecharger_41.jpeg?ex=680f0f5c&is=680dbddc&hm=876c0488796e876c427fc8df7a85bad0d38e4d37b7133b78364ff9350651d298&",
+        "banniere_url": "https://cdn.discordapp.com/attachments/1364763398075842570/1365920091283259412/Home_Office___MM_Villa_-_Ahmed_Elkurdi.jpeg?ex=680f0fb7&is=680dbe37&hm=6f75460d63379a3e3fd393b99ea5473a0a07d8430a5783ac7e65a0ffe8feba64&",
+        "restreint": false,
+        "roles_autorises": [
+            1364766727887519775
+        ],
+        "role_associe": null,
+        "pouvoir": null,
+        "couleur": "#10b566",
+        "histoire": null,
+        "position": {
+            "x": 0,
+            "y": 0
+        },
+        "relations": {
+            "Amis": [],
+            "Ennemis": [],
+            "Famille": []
+        }
     }
 }

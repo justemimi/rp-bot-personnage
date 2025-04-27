@@ -422,6 +422,122 @@ async def relation_modifier(ctx, nom: str, type_relation: str, cible: discord.Me
 
     await ctx.send(f"{action} **{type_relation}** de **{nom}** : {cible_nom}")
 
+# Chargement des données
+if os.path.exists("data.json"):
+    with open("data.json", "r") as f:
+        players = json.load(f)
+else:
+    players = {}
+
+def save_data():
+    with open("data.json", "w") as f:
+        json.dump(players, f, indent=4)
+
+# Config niveaux/récompenses
+level_up_requirements = {
+    2: 100,
+    5: 500,
+    10: 1200,
+    20: 3000,
+}
+
+role_rewards = {
+    5: "Guerrier",
+    10: "Champion",
+    20: "Légende",
+}
+
+equipment_rewards = {
+    2: "Casque en cuir",
+    5: "Épée en fer",
+    10: "Armure d'or",
+    20: "Épée légendaire",
+}
+
+# Ajouter de l'XP
+async def add_xp(member, amount):
+    user_id = str(member.id)
+    if user_id not in players:
+        players[user_id] = {"xp": 0, "level": 1, "inventory": []}
+
+    players[user_id]["xp"] += amount
+    xp = players[user_id]["xp"]
+    level = players[user_id]["level"]
+
+    for lvl, required_xp in sorted(level_up_requirements.items()):
+        if xp >= required_xp and lvl > level:
+            players[user_id]["level"] = lvl
+            await reward_player(member, lvl)
+
+    save_data()
+
+# Récompense automatique
+async def reward_player(member, level):
+    guild = member.guild
+    user_id = str(member.id)
+
+    if level in role_rewards:
+        role_name = role_rewards[level]
+        role = discord.utils.get(guild.roles, name=role_name)
+        if role:
+            await member.add_roles(role)
+
+    if level in equipment_rewards:
+        item = equipment_rewards[level]
+        players[user_id]["inventory"].append(item)
+
+    await member.send(f"🎉 Bravo {member.name}, tu es monté au niveau {level} !")
+
+# Ajouter XP sur chaque message/commande
+@bot.event
+async def on_command(ctx):
+    await add_xp(ctx.author, 10)  # 10 XP par commande
+
+# ------------------ COMMANDES ------------------
+
+@bot.command()
+async def xp(ctx, member: discord.Member = None):
+    if member is None:
+        member = ctx.author
+    user_id = str(member.id)
+    xp = players.get(user_id, {}).get("xp", 0)
+    await ctx.send(f"🔵 {member.display_name} a {xp} XP.")
+
+@bot.command()
+async def niveau(ctx, member: discord.Member = None):
+    if member is None:
+        member = ctx.author
+    user_id = str(member.id)
+    level = players.get(user_id, {}).get("level", 1)
+    await ctx.send(f"🟣 {member.display_name} est niveau {level}.")
+
+@bot.command()
+async def grades(ctx, member: discord.Member = None):
+    if member is None:
+        member = ctx.author
+    user_id = str(member.id)
+    level = players.get(user_id, {}).get("level", 1)
+
+    current_grade = "Aucun"
+    for lvl, grade in sorted(role_rewards.items(), reverse=True):
+        if level >= lvl:
+            current_grade = grade
+            break
+
+    await ctx.send(f"🛡️ {member.display_name} a pour grade : {current_grade}")
+
+@bot.command()
+async def equipement(ctx, member: discord.Member = None):
+    if member is None:
+        member = ctx.author
+    user_id = str(member.id)
+    inventory = players.get(user_id, {}).get("inventory", [])
+    if inventory:
+        items = "\n".join(f"🛡️ {item}" for item in inventory)
+        await ctx.send(f"🎒 Équipements de {member.display_name} :\n{items}")
+    else:
+        await ctx.send(f"🎒 {member.display_name} n'a pas encore d'équipement.")
+
 @bot.command()
 async def aide(ctx):
     commandes = """
@@ -457,6 +573,12 @@ Histoire des personnages :
 Carte :
 🗺️ m!catre ➔ Affiche la carte du monde
 🗺️ m!carte_control <nom> <x> <y> ➔ Déplacer un personnage sur la carte
+
+Niveau :
+🏅 m!xp <@membre> → Affiche le nombre d'XP du membre (ou toi-même si vide)
+🏅 m!niveau <@membre> → Affiche ton niveau actuel
+🏅 m!grades <@membre> → Affiche ton grade en fonction de ton niveau
+🏅 m!equipement <@membre> → Affiche ton inventaire d’équipements gagnés avec le niveau
 
 Bonus :
 😂 m!blague ➔ Blague aléatoire

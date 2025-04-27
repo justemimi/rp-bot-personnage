@@ -406,8 +406,8 @@ Cretion personnages et gestion :
 🔣 m!changer_symbole <nom> <symbole> ➔ Changer le symbole
 
 Affichage :
-📃 m!liste_personnage ➔ Voir la liste des personnages
-m!aide ➔ Voir les commandes disponibles
+⚙️ m!liste_personnage ➔ Voir la liste des personnages
+⚙️ m!aide ➔ Voir les commandes disponibles
 
 Personalisation des personnages :
 🖼️ m!modifier_image <nom> ➔ Modifier l'image
@@ -423,8 +423,8 @@ Personalisation des personnages :
 Histoire des personnages :
 📖 m!histoire <nom> ➔ Voir ou définir l'histoire du personnage
 📖 m!histoire <nom> <histoire>... ➔ Change ou ajoute l’histoire.
-m!relation <nom> → pour afficher ses amis, ennemis, famille.
-m!relation_modifier <nom> <Amis/Ennemis/Famille> <@mention>  → pour ajouter/supprimer des relations.
+👥 m!relation <nom> → pour afficher ses amis, ennemis, famille.
+👥 m!relation_modifier <nom> <Amis/Ennemis/Famille> <@mention>  → pour ajouter/supprimer des relations.
 
 Carte :
 🗺️ m!catre ➔ Affiche la carte du monde

@@ -538,6 +538,9 @@ async def equipement(ctx, member: discord.Member = None):
     else:
         await ctx.send(f"🎒 {member.display_name} n'a pas encore d'équipement.")
 
+import json
+import os
+
 @bot.command()
 async def aide(ctx):
     commandes = """
@@ -579,6 +582,7 @@ Niveau :
 🏅 m!niveau <@membre> → Affiche ton niveau actuel
 🏅 m!grades <@membre> → Affiche ton grade en fonction de ton niveau
 🏅 m!equipement <@membre> → Affiche ton inventaire d’équipements gagnés avec le niveau
+
 
 Bonus :
 😂 m!blague ➔ Blague aléatoire

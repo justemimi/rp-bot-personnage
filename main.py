@@ -20,7 +20,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)  # OK
         self.send_header('Content-type', 'text/html')  # Type de la réponse
         self.end_headers()
-        self.wfile.write("🚀 Bot RP Manager est en ligne !".encode('utf-8'))
+        self.wfile.write(b"🚀 Bot RP Manager est en ligne !")  # Message de réponse
 
 # Fonction pour lancer le serveur
 def run_web():
@@ -32,7 +32,6 @@ def run_web():
 def keep_alive():
     thread = threading.Thread(target=run_web)
     thread.start()
-
 # Charger les personnages
 if not os.path.exists('data.json'):
     with open('data.json', 'w') as f:

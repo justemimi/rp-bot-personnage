@@ -4,6 +4,9 @@ import random
 import json
 import os
 import asyncio
+from keep_alive import keep_alive
+
+keep_alive()
 
 # --- Keep Alive Server pour héberger ton bot ---
 

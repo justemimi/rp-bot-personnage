@@ -37,6 +37,16 @@ if not os.path.exists('data.json'):
     with open('data.json', 'w') as f:
         json.dump({}, f)
 
+with open('data.json', 'r') as f:
+    personnages = json.load(f)
+
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+intents.guilds = True
+intents.members = True
+bot = commands.Bot(command_prefix="m!", intents=intents)
+
 @bot.event
 async def on_ready():
     print(f"{bot.user} est connecté avec succès !")
@@ -77,6 +87,24 @@ async def creer_personnage(ctx, nom: str, symbole: str):
 
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
 
+    
+@bot.command(name="banniere")
+async def modifier_banniere(ctx, nom: str):
+    if nom not in personnages:
+        await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
+        return
+
+    if not ctx.message.attachments:
+        await ctx.send("❌ Merci d'envoyer une image en pièce jointe avec la commande.")
+        return
+
+    attachment = ctx.message.attachments[0]
+    personnages[nom]['banniere_url'] = attachment.url
+
+    with open('data.json', 'w') as f:
+        json.dump(personnages, f, indent=4)
+
+    await ctx.send(f"✅ La bannière du personnage {nom} a été mise à jour avec succès !")
 
 @bot.command()
 async def definir_type(ctx, nom: str, type_perso: str):
@@ -307,6 +335,39 @@ async def histoire(ctx, nom: str, *, texte: str = None):
             json.dump(personnages, f, indent=4)
         await ctx.send(f"✅ Histoire de {nom} mise à jour !")
 
+@bot.command(name="carte")
+async def carte(ctx):
+    largeur, hauteur = 20, 10  # Taille de la carte
+    grille = [["." for _ in range(largeur)] for _ in range(hauteur)]
+
+    # Placer les personnages
+    for nom, infos in personnages.items():
+        pos = infos.get("position", {"x": 0, "y": 0})
+        x, y = pos.get("x", 0), pos.get("y", 0)
+        if 0 <= x < largeur and 0 <= y < hauteur:
+            symbole = infos.get("symbole", "?")
+            grille[y][x] = symbole
+
+    # Dessiner la carte
+    texte = "🗺️ **Carte du Monde**\n\n"
+    for ligne in grille:
+        texte += " ".join(ligne) + "\n"
+
+    await ctx.send(texte)
+
+@bot.command(name="combat_perso")
+async def combat_perso_vs_perso(ctx, perso1: str, vs: str, perso2: str):
+    if nom not in personnages:
+        await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
+        return
+
+    largeur, hauteur = 20, 10
+    if not (0 <= x < largeur) or not (0 <= y < hauteur):
+        await ctx.send(f"❌ Coordonnées invalides ! (x doit être entre 0 et {largeur-1}, y entre 0 et {hauteur-1})")
+        return
+
+    personnages[nom]["position"] = {"x": x, "y": y}
+    await ctx.send(f"✅ {nom} a été déplacé en position ({x}, {y}) !")
 
 @bot.command(name="relation")
 async def relation(ctx, nom: str):
@@ -627,6 +688,10 @@ m!profil_couleur ➔ Modifier la couleur de son profil
 m!profil_type ➔ Choisir le type/race de son personnage
 m!profil_pouvoir ➔ Définir son pouvoir magique/spécial
 m!profil ➔ Voir son propre profil ou celui d'un membre
+
+Carte :
+🗺️ m!catre ➔ Affiche la carte du monde
+🗺️ m!carte_control <nom> <x> <y> ➔ Déplacer un personnage sur la carte
 
 Niveau :
 🏅 m!xp <@membre> → Affiche le nombre d'XP du membre (ou toi-même si vide)

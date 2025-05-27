@@ -6,14 +6,6 @@ import os
 import asyncio
 from keep_alive import keep_alive
 
-keep_alive()
-
-# --- Keep Alive Server pour héberger ton bot ---
-
-import threading
-import http.server
-import socketserver
-
 # keep_alive.py
 from flask import Flask
 from threading import Thread
@@ -30,32 +22,6 @@ def run():
 def keep_alive():
     t = Thread(target=run)
     t.start()
-
-# Handler pour répondre à toutes les requêtes entrantes
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)  # OK
-        self.send_header('Content-type', 'text/html')  # Type de la réponse
-        self.end_headers()
-        self.wfile.write("🚀 Bot RP Manager est en ligne !".encode('utf-8'))
-        
-# Fonction pour lancer le serveur
-def run_web():
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"🛰️ Serveur keep_alive actif sur le port {PORT}")
-        httpd.serve_forever()
-
-# Fonction keep_alive() à appeler au lancement du bot
-def keep_alive():
-    thread = threading.Thread(target=run_web)
-    thread.start()
-# Charger les personnages
-if not os.path.exists('data.json'):
-    with open('data.json', 'w') as f:
-        json.dump({}, f)
-
-with open('data.json', 'r') as f:
-    personnages = json.load(f)
 
 intents = discord.Intents.default()
 intents.messages = True

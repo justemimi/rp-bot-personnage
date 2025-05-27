@@ -11,7 +11,7 @@ import threading
 import http.server
 import socketserver
 
-# Choisis ton port (tu peux laisser 8080)
+# Choisis ton port
 PORT = 8080
 
 # Handler pour répondre à toutes les requêtes entrantes

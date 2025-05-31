@@ -62,14 +62,15 @@ async def creer_personnage(ctx, nom: str, symbole: str):
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
 
 @bot.command()
-async def liste_personnage(ctx):
+async def liste(ctx):
     user_id = str(ctx.author.id)
-    liste = personnages_data.get(user_id, [])
 
-    if not liste:
+    liste_persos = personnages_data.get(user_id, [])
+
+    if not liste_persos:
         await ctx.send("❌ Tu n'as encore créé aucun personnage.")
     else:
-        personnages = "\n".join(f"- {nom}" for nom in liste)
+        personnages = "\n".join(f"- {nom}" for nom in liste_persos)
         await ctx.send(f"📜 **Voici tes personnages :**\n{personnages}")
 
     
@@ -647,7 +648,7 @@ Cretion personnages et gestion :
 🔣 m!changer_symbole <nom> <symbole> ➔ Changer le symbole
 
 Affichage :
-⚙️ m!liste_personnage ➔ Voir la liste des personnages
+⚙️ m!liste ➔ Voir la liste des personnages
 ⚙️ m!aide ➔ Voir les commandes disponibles
 
 Personalisation des personnages :

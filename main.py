@@ -675,7 +675,7 @@ Cretion personnages et gestion :
 🔣 m!changer_symbole <nom> <symbole> ➔ Changer le symbole
 
 Affichage :
-⚙️ m!liste_personnage ➔ Voir la liste des personnages
+⚙️ m!liste ➔ Voir la liste des personnages
 ⚙️ m!aide ➔ Voir les commandes disponibles
 
 Personalisation des personnages :

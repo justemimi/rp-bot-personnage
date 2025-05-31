@@ -762,9 +762,6 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-keep_alive()
-
-
 # -------------------------------
 # LANCEMENT DU BOT
 # -------------------------------

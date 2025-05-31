@@ -61,6 +61,17 @@ async def creer_personnage(ctx, nom: str, symbole: str):
 
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
 
+@bot.command()
+async def liste_personnage(ctx):
+    user_id = str(ctx.author.id)
+    liste = personnages_data.get(user_id, [])
+
+    if not liste:
+        await ctx.send("❌ Tu n'as encore créé aucun personnage.")
+    else:
+        personnages = "\n".join(f"- {nom}" for nom in liste)
+        await ctx.send(f"📜 **Voici tes personnages :**\n{personnages}")
+
     
 @bot.command(name="banniere")
 async def modifier_banniere(ctx, nom: str):

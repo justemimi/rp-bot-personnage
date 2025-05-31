@@ -37,7 +37,7 @@
         },
         "relations": {
             "Amis": [
-                "Lee mul-sonyeo"
+                "Lee Mimi"
             ],
             "Ennemis": [],
             "Famille": []
@@ -67,3 +67,24 @@
         }
     }
 }
+{
+    "Mimi": {
+        "symbole": "Mimi",
+        "type": "Humain",
+        "image_url": "https://pin.it/316mGk9e4",
+        "banniere_url": "https://pin.it/41ipqVoUo",
+        "restreint": false,
+        "roles_autorises": [],
+        "role_associe": null,
+        "pouvoir": "Super pouvoir",
+        "couleur": "#0dc4fb",
+        "histoire": "Il \u00e9tait une fois...",
+        "position": {
+            "x": 0,
+            "y": 0
+        },
+        "relations": {
+            "Amis": [],
+            "Ennemis": [],
+            "Famille": []
+        }

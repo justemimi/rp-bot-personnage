@@ -13,3 +13,4 @@ def run():
 def keep_alive():
     t = Thread(target=run)
     t.start()
+app = Flask(__name__)

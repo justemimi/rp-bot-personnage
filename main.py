@@ -4,8 +4,6 @@ import random
 import json
 import os
 import asyncio
-from keep_alive import keep_alive
-keep_alive()
 
 
 # Charger les personnages

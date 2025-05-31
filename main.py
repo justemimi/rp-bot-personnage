@@ -4,56 +4,30 @@ import random
 import json
 import os
 import asyncio
-
-# --- Keep Alive Server pour héberger ton bot ---
-
 import threading
 import http.server
 import socketserver
 
-# Choisis ton port
+# --- CONFIGURATION KEEP ALIVE ---
 PORT = 8080
 
-# Handler pour répondre à toutes les requêtes entrantes
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)  # OK
-        self.send_header('Content-type', 'text/html')  # Type de la réponse
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
         self.end_headers()
         self.wfile.write("🚀 Bot RP Manager est en ligne !".encode('utf-8'))
-        
-# Fonction pour lancer le serveur
+
 def run_web():
     with socketserver.TCPServer(("", PORT), Handler) as httpd:
         print(f"🛰️ Serveur keep_alive actif sur le port {PORT}")
         httpd.serve_forever()
 
-# Fonction keep_alive() à appeler au lancement du bot
 def keep_alive():
     thread = threading.Thread(target=run_web)
     thread.start()
-# Charger les personnages
-if not os.path.exists('data.json'):
-    with open('data.json', 'w') as f:
-        json.dump({}, f)
 
-with open('data.json', 'r') as f:
-    personnages = json.load(f)
-
-intents = discord.Intents.default()
-intents.messages = True
-intents.message_content = True
-intents.guilds = True
-intents.members = True
-bot = commands.Bot(command_prefix="m!", intents=intents)
-
-@bot.event
-async def on_ready():
-    print(f"{bot.user} est connecté avec succès !")
-
-# -------------------------------
-# COMMANDES
-# -------------------------------
+# --- GESTION DES DONNÉES ---
 
 DATA_FILE = "data.json"
 
@@ -67,6 +41,25 @@ def sauvegarder_data(data):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
+# Charger les personnages au démarrage
+if not os.path.exists(DATA_FILE):
+    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+        json.dump({}, f)
+
+# --- CONFIGURATION DU BOT DISCORD ---
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+intents.guilds = True
+intents.members = True
+
+bot = commands.Bot(command_prefix="m!", intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f"✅ {bot.user} est connecté avec succès !")
+
+# --- COMMANDE: m!creer_personnage ---
 @bot.command(name="creer_personnage")
 async def creer_personnage(ctx, nom: str, symbole: str):
     data = charger_data()

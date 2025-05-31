@@ -55,20 +55,39 @@ async def on_ready():
 # COMMANDES
 # -------------------------------
 
+import json
+import os
+
+DATA_FILE = "data.json"
+
+def charger_data():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def sauvegarder_data(data):
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
 @bot.command(name="creer_personnage")
 async def creer_personnage(ctx, nom: str, symbole: str):
-    if nom in personnages:
+    data = charger_data()
+    guild_id = str(ctx.guild.id)
+
+    if guild_id not in data:
+        data[guild_id] = {}
+
+    if nom in data[guild_id]:
         await ctx.send(f"❌ Le personnage **{nom}** existe déjà !")
         return
 
-    # Récupérer l'image envoyée avec le message
-    image_url = None
-    if ctx.message.attachments:
-        image_url = ctx.message.attachments[0].url
+    # Récupérer l'image envoyée avec la commande
+    image_url = ctx.message.attachments[0].url if ctx.message.attachments else None
 
-    personnages[nom] = {
+    data[guild_id][nom] = {
         "symbole": symbole,
-        "type": "Inconnu",  # Type par défaut
+        "type": "Inconnu",
         "image_url": image_url,
         "banniere_url": None,
         "restreint": False,
@@ -85,6 +104,7 @@ async def creer_personnage(ctx, nom: str, symbole: str):
         }
     }
 
+    sauvegarder_data(data)
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
 
 @bot.command()

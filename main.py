@@ -765,16 +765,6 @@ async def on_message(message):
 # -------------------------------
 # LANCEMENT DU BOT
 # -------------------------------
-import discord
-from keep_alive import keep_alive 
-
-keep_alive()
-
-client = discord.run()
-
-@client.event
-async def on_ready():
-    print(f'Connecté en tant que {client.user}')
 
 bot.run(os.getenv('DISCORD_TOKEN'))
 

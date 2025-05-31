@@ -776,6 +776,6 @@ client = discord.Client()
 async def on_ready():
     print(f'Connecté en tant que {client.user}')
 
-client.run('DISCORD_TOKEN')
+client.run("DISCORD_TOKEN")
 
 bot.run(os.getenv('DISCORD_TOKEN'))

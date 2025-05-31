@@ -55,9 +55,6 @@ async def on_ready():
 # COMMANDES
 # -------------------------------
 
-import json
-import os
-
 DATA_FILE = "data.json"
 
 def charger_data():

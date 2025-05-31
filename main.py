@@ -4,34 +4,10 @@ import random
 import json
 import os
 import asyncio
+from keep_alive import keep_alive
+keep_alive()
 
-# --- Keep Alive Server pour héberger ton bot ---
 
-import threading
-import http.server
-import socketserver
-
-# Choisis ton port
-PORT = 8080
-
-# Handler pour répondre à toutes les requêtes entrantes
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)  # OK
-        self.send_header('Content-type', 'text/html')  # Type de la réponse
-        self.end_headers()
-        self.wfile.write("🚀 Bot RP Manager est en ligne !".encode('utf-8'))
-        
-# Fonction pour lancer le serveur
-def run_web():
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"🛰️ Serveur keep_alive actif sur le port {PORT}")
-        httpd.serve_forever()
-
-# Fonction keep_alive() à appeler au lancement du bot
-def keep_alive():
-    thread = threading.Thread(target=run_web)
-    thread.start()
 # Charger les personnages
 if not os.path.exists('data.json'):
     with open('data.json', 'w') as f:
@@ -786,8 +762,18 @@ async def on_message(message):
             break
 
     await bot.process_commands(message)
+import discord
+from keep_alive import keep_alive
 
 keep_alive()
+
+client = discord.Client()
+
+@client.event
+async def on_ready():
+    print(f'Connecté en tant que {client.user}')
+
+client.run('DISCORD_TOKEN')
 
 # -------------------------------
 # LANCEMENT DU BOT

@@ -89,16 +89,23 @@ async def creer_personnage(ctx, nom: str, symbole: str):
 
 @bot.command()
 async def liste(ctx):
-    user_id = str(ctx.author.id)
+    import json
 
-    # On suppose que personnages_data est un dict {user_id: [liste de persos]}
-    liste_persos = personnages_data.get(user_id, [])
+    with open("data.json", "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-    if not liste_persos:
-        await ctx.send("❌ Tu n'as encore créé aucun personnage.")
-    else:
-        personnages = "\n".join(f"- {nom}" for nom in liste_persos)
-        await ctx.send(f"📜 **Voici tes personnages :**\n{personnages}")
+    guild_id = str(ctx.guild.id)
+
+    if guild_id not in data or not data[guild_id]:
+        await ctx.send("❌ Aucun personnage trouvé sur ce serveur.")
+        return
+
+    message = "📜 **Liste des personnages :**\n"
+    for nom, infos in data[guild_id].items():
+        symbole = infos.get("symbole", "❔")
+        message += f"{symbole} {nom}\n"
+
+    await ctx.send(message)
 
     
 @bot.command(name="banniere")

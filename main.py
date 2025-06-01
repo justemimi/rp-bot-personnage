@@ -797,6 +797,17 @@ keep_alive()
 # -------------------------------
 # LANCEMENT DU BOT
 # -------------------------------
-keep_alive()
+import discord
+from keep_alive import keep_alive
+
+keep_alive()  # ← important, lance le serveur web invisible
+
+client = discord.Client()
+
+@client.event
+async def on_ready():
+    print(f'✅ Connecté en tant que {client.user}')
+
+client.run('DISCORD_TOKEN')
 
 bot.run(os.getenv('DISCORD_TOKEN'))

@@ -27,55 +27,36 @@ def keep_alive():
     thread = threading.Thread(target=run_web)
     thread.start()
 
-# --- GESTION DES DONNÉES ---
-
-DATA_FILE = "data.json"
-
-def charger_data():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
-
-def sauvegarder_data(data):
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-
-# Charger les personnages au démarrage
-if not os.path.exists(DATA_FILE):
-    with open(DATA_FILE, 'w', encoding='utf-8') as f:
+# Charger les personnages
+if not os.path.exists('data.json'):
+    with open('data.json', 'w') as f:
         json.dump({}, f)
 
-# --- CONFIGURATION DU BOT DISCORD ---
+with open('data.json', 'r') as f:
+    personnages = json.load(f)
+
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True
 intents.guilds = True
 intents.members = True
-
 bot = commands.Bot(command_prefix="m!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"✅ {bot.user} est connecté avec succès !")
+    print(f"{bot.user} est connecté avec succès !")
 
-# --- COMMANDE: m!creer_personnage ---
 @bot.command(name="creer_personnage")
 async def creer_personnage(ctx, nom: str, symbole: str):
-    data = charger_data()
-    guild_id = str(ctx.guild.id)
-
-    if guild_id not in data:
-        data[guild_id] = {}
-
-    if nom in data[guild_id]:
+    if nom in personnages:
         await ctx.send(f"❌ Le personnage **{nom}** existe déjà !")
         return
 
-    # Récupérer l'image envoyée avec la commande
-    image_url = ctx.message.attachments[0].url if ctx.message.attachments else None
+    image_url = None
+    if ctx.message.attachments:
+        image_url = ctx.message.attachments[0].url
 
-    data[guild_id][nom] = {
+    personnages[nom] = {
         "symbole": symbole,
         "type": "Inconnu",
         "image_url": image_url,
@@ -84,7 +65,7 @@ async def creer_personnage(ctx, nom: str, symbole: str):
         "roles_autorises": [],
         "role_associe": None,
         "pouvoir": None,
-        "couleur": "bleu",
+        "couleur": "#3498db",
         "histoire": None,
         "position": {"x": 0, "y": 0},
         "relations": {
@@ -94,28 +75,22 @@ async def creer_personnage(ctx, nom: str, symbole: str):
         }
     }
 
-    sauvegarder_data(data)
+    with open('data.json', 'w') as f:
+        json.dump(personnages, f, indent=4)
+
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
 
-@bot.command()
-async def liste(ctx):
-    import json
-
-    with open("data.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    guild_id = str(ctx.guild.id)
-
-    if guild_id not in data or not data[guild_id]:
-        await ctx.send("❌ Aucun personnage trouvé sur ce serveur.")
+@bot.command(name="liste_personnage")
+async def liste_personnage(ctx):
+    if not personnages:
+        await ctx.send("❌ Aucun personnage enregistré.")
         return
 
-    message = "📜 **Liste des personnages :**\n"
-    for nom, infos in data[guild_id].items():
-        symbole = infos.get("symbole", "❔")
-        message += f"{symbole} {nom}\n"
+    texte = "**📜 Liste des personnages :**\n\n"
+    for nom in personnages.keys():
+        texte += f"- {nom}\n"
 
-    await ctx.send(message)
+    await ctx.send(texte)
 
     
 @bot.command(name="banniere")
@@ -692,7 +667,7 @@ Cretion personnages et gestion :
 🔣 m!changer_symbole <nom> <symbole> ➔ Changer le symbole
 
 Affichage :
-⚙️ m!liste ➔ Voir la liste des personnages
+⚙️ m!liste_personnage ➔ Voir la liste des personnages
 ⚙️ m!aide ➔ Voir les commandes disponibles
 
 Personalisation des personnages :

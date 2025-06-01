@@ -4,13 +4,20 @@ import json
 import os
 import random
 
-# Chargement des personnages
-if not os.path.exists("personnages.json"):
-    with open("personnages.json", "w") as f:
+# Charger les personnages
+if not os.path.exists('data.json'):
+    with open('data.json', 'w') as f:
         json.dump({}, f)
 
-with open("personnages.json", "r") as f:
+with open('data.json', 'r') as f:
     personnages = json.load(f)
+
+intents = discord.Intents.default()
+intents.messages = True
+intents.message_content = True
+intents.guilds = True
+intents.members = True
+bot = commands.Bot(command_prefix="m!", intents=intents)
 
 # Sauvegarde
 def sauvegarder():
@@ -635,7 +642,7 @@ async def aide(ctx):
     commandes = """
 **Commandes disponibles :**
 Cretion personnages et gestion :
-📄 m!creer <nom> <symbole> ➔ Créer un personnage
+📄 m!creer_personnage <nom> <symbole> ➔ Créer un personnage
 🔧 m!definir_type <nom> <type> ➔ Définir le type du personnage
 ✏️ m!modifier_nom <nom> <nouveau_nom> ➔ Modifier le nom
 🗑️ m!sup_perso <nom> ➔ Supprimer un personnage

@@ -14,7 +14,7 @@ intents.message_content = True  # obligatoire pour lire le contenu des messages
 bot = commands.Bot(command_prefix="m!", intents=intents)
 
 # --- CONFIGURATION KEEP ALIVE ---
-PORT = 8081
+PORT = 8080
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):

@@ -4,19 +4,20 @@ import json
 import os
 import random
 
-# Charger les personnages
-if not os.path.exists('data.json'):
-    with open('data.json', 'w') as f:
+# Chargement des personnages
+if not os.path.exists("personnages.json"):
+    with open("personnages.json", "w") as f:
         json.dump({}, f)
 
-with open('data.json', 'r') as f:
+with open("personnages.json", "r") as f:
     personnages = json.load(f)
-intents = discord.Intents.default()
-intents.messages = True
-intents.message_content = True
-intents.guilds = True
-intents.members = True
-bot = commands.Bot(command_prefix="m!", intents=intents)
+
+# Sauvegarde
+def sauvegarder():
+    with open("personnages.json", "w") as f:
+        json.dump(personnages, f, indent=4)
+
+# Créer un personnage
 
 @bot.event
 async def on_ready():

@@ -11,7 +11,6 @@ if not os.path.exists('data.json'):
 
 with open('data.json', 'r') as f:
     personnages = json.load(f)
-
 intents = discord.Intents.default()
 intents.messages = True
 intents.message_content = True

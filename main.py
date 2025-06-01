@@ -40,6 +40,8 @@ async def creer_personnage(ctx, nom: str, symbole: str):
     if ctx.message.attachments:
         image_url = ctx.message.attachments[0].url
 
+}
+    }
     personnages[nom] = {
         "symbole": symbole,
         "type": "Inconnu",

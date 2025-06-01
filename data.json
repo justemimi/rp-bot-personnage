@@ -40,3 +40,4 @@
     "histoire": null,
     "position": { "x": 0, "y": 0 },
     "relations": { "Amis": [], "Ennemis": [], "Famille": [] }
+  },

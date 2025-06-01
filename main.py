@@ -1,37 +1,8 @@
 import discord
 from discord.ext import commands
-import random
 import json
 import os
-import asyncio
-import threading
-import http.server
-import socketserver
-
-intents = discord.Intents.default()
-intents.message_content = True  # obligatoire pour lire le contenu des messages
-
-bot = commands.Bot(command_prefix="m!", intents=intents)
-
-# --- CONFIGURATION KEEP ALIVE ---
-PORT = 8080
-
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
-        self.wfile.write("🚀 Bot RP Manager est en ligne !".encode('utf-8'))
-
-def run_web():
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
-        print(f"🛰️ Serveur keep_alive actif sur le port {PORT}")
-        httpd.serve_forever()
-
-def keep_alive():
-    thread = threading.Thread(target=run_web)
-    thread.start()
-    
+import random
 
 # Charger les personnages
 if not os.path.exists('data.json'):
@@ -85,27 +56,19 @@ async def creer_personnage(ctx, nom: str, symbole: str):
         json.dump(personnages, f, indent=4)
 
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
-    
+
 @bot.command(name="liste_personnage")
 async def liste_personnage(ctx):
-    if os.path.exists('data.json'):
-        with open('data.json', 'r', encoding='utf-8') as f:
-            personnages = json.load(f)
-    else:
-        await ctx.send("❌ Aucun personnage enregistré.")
-        return
-
     if not personnages:
         await ctx.send("❌ Aucun personnage enregistré.")
         return
 
-    texte = "**📜 Liste des personnages :**\n"
-    for nom in personnages:
+    texte = "**📜 Liste des personnages :**\n\n"
+    for nom in personnages.keys():
         texte += f"- {nom}\n"
 
     await ctx.send(texte)
 
-    
 @bot.command(name="banniere")
 async def modifier_banniere(ctx, nom: str):
     if nom not in personnages:
@@ -192,7 +155,6 @@ async def info_perso(ctx, nom: str):
     desc += f"Type : {infos.get('type', 'Inconnu')}\n"
     desc += f"Pouvoir : {infos.get('pouvoir', 'Non défini')}\n"
 
-    # Rôles autorisés
     roles = infos.get("roles_autorises", [])
     if roles:
         roles_mentions = [f"<@&{role_id}>" for role_id in roles]
@@ -200,16 +162,13 @@ async def info_perso(ctx, nom: str):
     else:
         desc += "🔓 Rôles autorisés : Tout le monde\n"
 
-    # Rôle associé
     role_associe = infos.get("role_associe")
     if role_associe:
         desc += f"🎭 Rôle associé : <@&{role_associe}>\n"
     else:
         desc += "🎭 Rôle associé : Aucun\n"
 
-    ## Couleur personnalisée avec code hexadécimal
-    couleur_code = infos.get("couleur", "#3498db")  # bleu par défaut
-
+    couleur_code = infos.get("couleur", "#3498db")
     try:
         couleur_embed = discord.Color(int(couleur_code[1:], 16))
     except ValueError:
@@ -219,19 +178,17 @@ async def info_perso(ctx, nom: str):
         title=f"📜 Fiche de {nom}",
         description=desc,
         color=couleur_embed
-        )
+    )
 
     image_url = infos.get("image_url")
     if image_url:
-        embed.set_thumbnail(url=image_url)  # PETITE IMAGE en haut à droite
+        embed.set_thumbnail(url=image_url)
 
     banniere_url = infos.get("banniere_url")
     if banniere_url:
-        embed.set_image(url=banniere_url)  # GRANDE BANNIÈRE en bas
+        embed.set_image(url=banniere_url)
 
     await ctx.send(embed=embed)
-
-
 
 @bot.command()
 async def pouvoir(ctx, nom: str, *, pouvoir_texte: str):
@@ -251,10 +208,8 @@ async def role(ctx, nom: str, role: discord.Role):
         return
 
     personnages[nom]["role_associe"] = role.id
-
     with open('data.json', 'w') as f:
         json.dump(personnages, f, indent=4)
-
     await ctx.send(f"🎭 Le rôle **{role.name}** a été associé au personnage **{nom}** !")
 
 @bot.command(name="restreins")
@@ -262,10 +217,6 @@ async def restreins(ctx, nom: str, role: discord.Role):
     if nom not in personnages:
         await ctx.send(f"❌ Le personnage **{nom}** n'existe pas.")
         return
-
-    # Si le perso n'a pas encore de liste de rôles restreints
-    if "roles_autorises" not in personnages[nom]:
-        personnages[nom]["roles_autorises"] = []
 
     if role.id not in personnages[nom]["roles_autorises"]:
         personnages[nom]["roles_autorises"].append(role.id)
@@ -278,7 +229,7 @@ async def restreins(ctx, nom: str, role: discord.Role):
 @bot.command(name="role_retirer")
 async def role_retirer(ctx, nom: str, role: discord.Role):
     if nom not in personnages:
-        await ctx.send(f"❌ Le personnage **{nom}** n'existe pas.")
+        await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
         return
 
     if personnages[nom].get("role_associe") != role.id:
@@ -286,32 +237,46 @@ async def role_retirer(ctx, nom: str, role: discord.Role):
         return
 
     personnages[nom]["role_associe"] = None
-
     with open('data.json', 'w') as f:
         json.dump(personnages, f, indent=4)
-
     await ctx.send(f"🎭 Le rôle **{role.name}** a été retiré du personnage **{nom}** !")
 
 @bot.command(name="restreins_retirer")
 async def restreins_retirer(ctx, nom: str, role: discord.Role):
     if nom not in personnages:
-        await ctx.send(f"❌ Le personnage **{nom}** n'existe pas.")
+        await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
         return
 
-    if "roles_autorises" not in personnages[nom] or role.id not in personnages[nom]["roles_autorises"]:
-        await ctx.send(f"❌ Le rôle {role.name} n'était pas restreint pour **{nom}**.")
-        return
-
-    personnages[nom]["roles_autorises"].remove(role.id)
-
-    # Si plus aucun rôle autorisé, on supprime complètement la restriction
-    if not personnages[nom]["roles_autorises"]:
-        del personnages[nom]["roles_autorises"]
+    if role.id in personnages[nom]["roles_autorises"]:
+        personnages[nom]["roles_autorises"].remove(role.id)
+        if not personnages[nom]["roles_autorises"]:
+            del personnages[nom]["roles_autorises"]
 
     with open('data.json', 'w') as f:
         json.dump(personnages, f, indent=4)
-
     await ctx.send(f"🔓 Le rôle **{role.name}** a été retiré des restrictions pour **{nom}** !")
+
+@bot.command(name="couleur_fiche")
+async def couleur_fiche(ctx, nom: str, couleur: str):
+    if nom not in personnages:
+        await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
+        return
+
+    if not couleur.startswith("#") or len(couleur) != 7:
+        await ctx.send("❌ Couleur invalide. Utilise un code hexadécimal comme `#FF0000`.")
+        return
+
+    try:
+        int(couleur[1:], 16)
+    except ValueError:
+        await ctx.send("❌ Ce n'est pas un vrai code couleur.")
+        return
+
+    personnages[nom]["couleur"] = couleur
+    with open('data.json', 'w') as f:
+        json.dump(personnages, f, indent=4)
+
+    await ctx.send(f"✅ Couleur de la fiche de {nom} changée en {couleur} !")
 
 @bot.command(name="couleur_fiche")
 async def couleur_fiche(ctx, nom: str, couleur: str):

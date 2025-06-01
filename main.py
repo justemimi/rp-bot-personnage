@@ -638,7 +638,7 @@ async def aide(ctx):
     commandes = """
 **Commandes disponibles :**
 Cretion personnages et gestion :
-📄 m!creer_personnage <nom> <symbole> ➔ Créer un personnage
+📄 m!creer <nom> <symbole> ➔ Créer un personnage
 🔧 m!definir_type <nom> <type> ➔ Définir le type du personnage
 ✏️ m!modifier_nom <nom> <nouveau_nom> ➔ Modifier le nom
 🗑️ m!sup_perso <nom> ➔ Supprimer un personnage

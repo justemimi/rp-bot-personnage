@@ -10,9 +10,9 @@
     "pouvoir": "Super pouvoir",
     "couleur": "rouge",
     "histoire": "Il était une fois...",
-    "position": { "x": 0, "y": 0 },
+    "position": { "x": 0, "y": 0 }
     "relations": { "Amis": [], "Ennemis": [], "Famille": [] }
-  },
+  }
   "Gya": {
     "symbole": "Gya",
     "type": "Inconnu",
@@ -26,7 +26,7 @@
     "histoire": null,
     "position": { "x": 0, "y": 0 },
     "relations": { "Amis": ["Lee Mimi"], "Ennemis": [], "Famille": [] }
-  },
+  }
   "Directeur": {
     "symbole": "Directeur",
     "type": "Inconnu",
@@ -40,19 +40,4 @@
     "histoire": null,
     "position": { "x": 0, "y": 0 },
     "relations": { "Amis": [], "Ennemis": [], "Famille": [] }
-  },
-  "Mimi": {
-    "symbole": "Mimi",
-    "type": "Humain",
-    "image_url": "https://pin.it/316mGk9e4",
-    "banniere_url": "https://pin.it/41ipqVoUo",
-    "restreint": false,
-    "roles_autorises": [],
-    "role_associe": null,
-    "pouvoir": "Super pouvoir",
-    "couleur": "#0dc4fb",
-    "histoire": "Il était une fois...",
-    "position": { "x": 0, "y": 0 },
-    "relations": { "Amis": [], "Ennemis": [], "Famille": [] }
   }
-}

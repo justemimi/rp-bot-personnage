@@ -261,27 +261,6 @@ async def restreins_retirer(ctx, nom: str, role: discord.Role):
         json.dump(personnages, f, indent=4)
     await ctx.send(f"🔓 Le rôle **{role.name}** a été retiré des restrictions pour **{nom}** !")
 
-@bot.command(name="couleur_fiche")
-async def couleur_fiche(ctx, nom: str, couleur: str):
-    if nom not in personnages:
-        await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
-        return
-
-    if not couleur.startswith("#") or len(couleur) != 7:
-        await ctx.send("❌ Couleur invalide. Utilise un code hexadécimal comme `#FF0000`.")
-        return
-
-    try:
-        int(couleur[1:], 16)
-    except ValueError:
-        await ctx.send("❌ Ce n'est pas un vrai code couleur.")
-        return
-
-    personnages[nom]["couleur"] = couleur
-    with open('data.json', 'w') as f:
-        json.dump(personnages, f, indent=4)
-
-    await ctx.send(f"✅ Couleur de la fiche de {nom} changée en {couleur} !")
 
 @bot.command(name="couleur_fiche")
 async def couleur_fiche(ctx, nom: str, couleur: str):

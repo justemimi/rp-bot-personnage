@@ -8,8 +8,13 @@ import threading
 import http.server
 import socketserver
 
+intents = discord.Intents.default()
+intents.message_content = True  # obligatoire pour lire le contenu des messages
+
+bot = commands.Bot(command_prefix="m!", intents=intents)
+
 # --- CONFIGURATION KEEP ALIVE ---
-PORT = 8080
+PORT = 8081
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):

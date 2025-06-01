@@ -70,7 +70,7 @@ async def liste_personnage(ctx):
     await ctx.send(texte)
 
 @bot.command(name="banniere")
-async def modifier_banniere(ctx, nom: str):
+async def banniere(ctx, nom: str):
     if nom not in personnages:
         await ctx.send(f"❌ Le personnage {nom} n'existe pas.")
         return
@@ -110,7 +110,7 @@ async def modifier_nom(ctx, nom: str, nouveau_nom: str):
     await ctx.send(f"✅ Nom modifié : {nom} ➔ {nouveau_nom}")
 
 @bot.command()
-async def modifier_image(ctx, nom: str):
+async def image(ctx, nom: str):
     if nom not in personnages:
         await ctx.send(f"❌ Ce personnage n'existe pas.")
         return
@@ -649,7 +649,7 @@ Affichage :
 ⚙️ m!aide ➔ Voir les commandes disponibles
 
 Personalisation des personnages :
-🖼️ m!modifier_image <nom> ➔ Modifier l'image
+🖼️ m!image <nom> ➔ Modifier l'image
 🏞️ m!banniere <nom> ➔ Modifier la bannière
 🧾 m!info_perso <nom> ➔ Voir la description
 ✨ m!pouvoir <nom> <pouvoir> ➔ Définir un pouvoir

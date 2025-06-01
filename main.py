@@ -31,6 +31,7 @@ def run_web():
 def keep_alive():
     thread = threading.Thread(target=run_web)
     thread.start()
+    
 
 # Charger les personnages
 if not os.path.exists('data.json'):
@@ -802,17 +803,6 @@ keep_alive()
 # -------------------------------
 # LANCEMENT DU BOT
 # -------------------------------
-import discord
-from keep_alive import keep_alive
-
-keep_alive()  # ← important, lance le serveur web invisible
-
-client = discord.Client()
-
-@client.event
-async def on_ready():
-    print(f'✅ Connecté en tant que {client.user}')
-
-client.run('DISCORD_TOKEN')
+keep_alive()
 
 bot.run(os.getenv('DISCORD_TOKEN'))

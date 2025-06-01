@@ -1,18 +1,4 @@
-{
-  "NomDuPerso": {
-    "symbole": "!",
-    "type": "Humain",
-    "image_url": "https://lien/image.png",
-    "banniere_url": "https://lien/banniere.png",
-    "restreint": false,
-    "roles_autorises": [],
-    "role_associe": null,
-    "pouvoir": "Super pouvoir",
-    "couleur": "rouge",
-    "histoire": "Il était une fois...",
-    "position": { "x": 0, "y": 0 }
-    "relations": { "Amis": [], "Ennemis": [], "Famille": [] }
-  }
+{}
   "Gya": {
     "symbole": "Gya",
     "type": "Inconnu",

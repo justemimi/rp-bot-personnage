@@ -73,7 +73,7 @@ async def liste(ctx):
         await ctx.send("📜 Aucun personnage enregistré.")
         return
     liste = "\n".join(personnages.keys())
-    await ctx.send(f"📜 Liste des personnages :\n{liste}"
+    await ctx.send(f"📜 Liste des personnages :\n{liste}")
 
 @bot.command(name="banniere")
 async def banniere(ctx, nom: str):

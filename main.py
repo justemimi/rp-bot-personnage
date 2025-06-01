@@ -88,12 +88,19 @@ async def creer_personnage(ctx, nom: str, symbole: str):
     
 @bot.command(name="liste_personnage")
 async def liste_personnage(ctx):
+    if os.path.exists('data.json'):
+        with open('data.json', 'r', encoding='utf-8') as f:
+            personnages = json.load(f)
+    else:
+        await ctx.send("❌ Aucun personnage enregistré.")
+        return
+
     if not personnages:
         await ctx.send("❌ Aucun personnage enregistré.")
         return
 
-    texte = "**📜 Liste des personnages :**\n\n"
-    for nom in personnages.keys():
+    texte = "**📜 Liste des personnages :**\n"
+    for nom in personnages:
         texte += f"- {nom}\n"
 
     await ctx.send(texte)

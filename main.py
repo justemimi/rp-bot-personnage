@@ -85,7 +85,7 @@ async def creer_personnage(ctx, nom: str, symbole: str):
         json.dump(personnages, f, indent=4)
 
     await ctx.send(f"✅ Personnage **{nom}** créé avec succès !")
-
+    
 @bot.command(name="liste_personnage")
 async def liste_personnage(ctx):
     if not personnages:

@@ -1,4 +1,18 @@
-{}
+{
+  "NomDuPersonnage": {
+    "symbole": "nul",
+    "type": "Inconnu",
+    "image_url": "nul",
+    "banniere_url": "nul",
+    "restreint": false,
+    "roles_autorises": [],
+    "role_associe": null,
+    "pouvoir": null,
+    "couleur": "#FF0000",
+    "histoire": null,
+    "position": { "x": 0, "y": 0 },
+    "relations": { "Amis": [], "Ennemis": [], "Famille": [] }
+}
   "Gya": {
     "symbole": "Gya",
     "type": "Inconnu",
